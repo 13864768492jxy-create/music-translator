@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>来源与许可</title><link rel="stylesheet" href="./style.css">
+<main style="max-width:800px;padding-top:50px;padding-bottom:60px"><h1 style="font-size:28px;font-weight:400">来源与开源许可</h1><div class="about-copy">
+<p>制作者 / 姜昕宇</p>
+<p>本工具在浏览器中分析本地音频 不上传用户录音 不提供任意乐器的准确识别保证 不自动将混音分离为独立乐器</p>
+<p>声学测量与乐句候选为数学估计 自动对白使用有限的中英话语素材与乐句规则 不调用语言模型 不构成对音乐语义的客观解码</p>
+<p><a href="https://essentia.upf.edu/models/feature-extractors/discogs-effnet/">Discogs EffNet 编码模型</a>与<a href="https://essentia.upf.edu/models/classification-heads/mtg_jamendo_instrument/">MTG Jamendo Instrument 模型</a>由 Universitat Pompeu Fabra Music Technology Group 发布 原始模型与元数据完整附于 models 目录 <a href="./models/LICENSE">原始许可文件</a>与<a href="https://essentia.upf.edu/models.html">官方模型许可说明</a>保持原文 供核对非商业使用条件</p>
+<p><a href="https://essentia.upf.edu/reference/std_TensorflowInputMusiCNN.html">音频前端</a>依据 Essentia 的 MusiCNN 规范 使用 16 kHz 采样率 512 点 Hann 窗口 256 点步长 96 个 Slaney Mel 频带 与 log10 压缩 系数由官方 Essentia 实现导出</p>
+<p>本工具代码依据 <a href="./LICENSE-AGPL-3.0.txt">AGPL-3.0</a> 开放 页面使用未压缩的 ES 模块 <a href="./app.js">应用源码</a> <a href="./core.js">对白与文件格式</a> <a href="./dsp.js">信号前端</a> <a href="./analysis-worker.js">模型调用</a> <a href="./storage.js">项目存储</a> <a href="./sw.js">离线缓存</a></p>
+<p><a href="https://github.com/microsoft/onnxruntime">ONNX Runtime Web 1.30.0</a>使用 MIT 许可 <a href="./vendor/onnx/LICENSE">许可原文</a></p>
+<p><a href="https://phosphoricons.com/">Phosphor Icons 2.1.2</a>使用 MIT 许可 <a href="./vendor/icons/LICENSE">许可原文</a></p>
+<p><a href="https://mediabunny.dev/">Mediabunny 1.61.5</a>用于逐帧 MP4 封装 使用 MPL-2.0 <a href="./vendor/media/LICENSE">许可原文</a> <a href="./video-export.js">视频导出源码</a></p>
+<p>模型排序是未经校准的分数 不代表统计置信度 乐句步长为 20 毫秒 不等于识别误差为 20 毫秒 浏览器实时视频导出也受设备性能与浏览器编码支持限制</p><p><a href="./">回到音乐翻译器</a></p></div></main></html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f8f9fa"><meta name="description" content="把音乐的音色与乐句写成对白 在浏览器里完成分析 双语创作与视频导出">
+  <meta name="author" content="姜昕宇">
+  <title>音乐翻译器</title><meta name="app-revision" content="20261019.1"><link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./vendor/icons/style.css"><link rel="stylesheet" href="./style.css?v=7">
+</head>
+<body>
+  <header class="app-header">
+    <button id="home" class="wordmark" title="回到作品库">音乐翻译器<span>Music into words</span></button>
+    <nav aria-label="作品操作"><button id="examples" class="quiet" aria-label="示例作品"><i class="ph ph-play-circle" aria-hidden="true"></i>示例</button><button id="library" class="quiet"><i class="ph ph-stack" aria-hidden="true"></i>作品库</button><button id="import" class="quiet"><i class="ph ph-upload-simple" aria-hidden="true"></i>导入音频</button><button id="export" class="solid" disabled>导出<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button></nav>
+  </header>
+
+  <main>
+    <section id="empty" class="empty" aria-label="开始创作">
+      <div class="empty-copy"><p class="intro">一段音乐 另一种语言</p><h1>听见声音里的<br>那个<span>人</span></h1><p class="empty-description">从音色与乐句出发<br>写一场只有音乐能说出的对话</p><button id="firstImport" class="solid large">选择一段音乐<i class="ph ph-arrow-right" aria-hidden="true"></i></button><p class="file-hint">MP3 · WAV · M4A · FLAC · OGG</p></div>
+      <div class="empty-note"><span class="thin-rule"></span><p>声音留在你的设备上<br>从导入到导出 都在浏览器里完成</p><button id="firstExamples" class="text-link">先看看两段示例<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button><br><button id="restore" class="text-link">打开项目文件<i class="ph ph-arrow-up-right" aria-hidden="true"></i></button></div>
+    </section>
+
+    <section id="workspace" hidden>
+      <div class="work-heading"><div><label class="sr-only" for="projectTitle">作品名称</label><input id="projectTitle" class="title-input" value="未命名作品" maxlength="80"><p id="sourceInfo" class="muted"></p></div><div class="mode-switch" role="group" aria-label="工作模式"><button id="editMode" aria-pressed="true">创作</button><button id="screenMode" aria-pressed="false">放映<i class="ph ph-corners-out" aria-hidden="true"></i></button></div></div>
+      <div class="clip-toolbar"><div class="clip-fields"><label for="clipStart">片段</label><input type="number" id="clipStart" min="0" step=".01" aria-label="片段起点 秒"><span>至</span><input type="number" id="clipEnd" min="0" step=".01" aria-label="片段终点 秒"><span>秒</span></div><button id="analyze" class="analysis-button"><i class="ph ph-waveform" aria-hidden="true"></i>分析这段音乐</button><span id="clipHint" class="muted">每次可分析 120 秒</span></div>
+      <div id="job" class="job" hidden role="status"><div><span id="jobText"></span><button id="cancelJob" class="text-link">取消</button></div><progress id="jobProgress" max="1" value="0"></progress></div>
+      <section class="stage" aria-label="声形与双语对白"><div id="lanes" class="lanes"></div><div id="noWords" class="no-words"><p>让声音先说</p><span>分析乐句后生成草稿<br>或在下方写下第一句对白</span></div></section>
+      <div class="transport" aria-label="播放器"><button id="play" class="play" aria-label="播放"><i class="ph ph-play" aria-hidden="true"></i></button><span id="elapsed" class="time">00:00</span><input type="range" id="seek" min="0" max="1" step=".001" value="0" aria-label="播放位置"><span id="duration" class="time">00:00</span><button id="mute" class="quiet icon-only" aria-label="静音"><i class="ph ph-speaker-high" aria-hidden="true"></i></button><button id="addCue" class="quiet"><i class="ph ph-plus" aria-hidden="true"></i>在此写一句</button></div>
+      <section id="editorPanel" class="editor-panel">
+        <div class="panel-tabs" role="tablist" aria-label="编辑面板"><button role="tab" id="dialogueTab" aria-selected="true" aria-controls="dialoguePanel">对白<span id="cueCount">0</span></button><button role="tab" id="voicesTab" aria-selected="false" aria-controls="voicesPanel">声部</button><button role="tab" id="analysisTab" aria-selected="false" aria-controls="analysisPanel">分析记录</button><span id="saveState" class="save-state" role="status">保存在当前浏览器</span></div>
+        <div id="dialoguePanel" role="tabpanel" aria-labelledby="dialogueTab"><div class="draft-toolbar"><div><label for="topic">想聊什么</label><select id="topic"><option value="time">给自己一点时间</option><option value="distance">关系里的距离</option><option value="outside">去更远的地方</option></select></div><button id="draft" class="quiet" disabled><i class="ph ph-sparkle" aria-hidden="true"></i>按乐句生成草稿</button><button id="undoDraft" class="text-link" hidden>撤回草稿</button></div><p id="draftNote" class="small muted">先分析这段音乐 或直接添加对白 时间和文字都可以修改</p><div id="cueEditor"></div><button id="appendCue" class="text-link add-line"><i class="ph ph-plus" aria-hidden="true"></i>添加一句</button></div>
+        <div id="voicesPanel" role="tabpanel" aria-labelledby="voicesTab" hidden><div class="section-lead"><p>为每个声部留出自己的位置</p><button id="importStems" class="quiet"><i class="ph ph-plus" aria-hidden="true"></i>导入独立声轨</button></div><p class="small muted">混音里的乐器候选不等于独立声部 导入已分离的声轨后 才能分别显示真实波形</p><div id="voiceEditor"></div></div>
+        <div id="analysisPanel" role="tabpanel" aria-labelledby="analysisTab" hidden><div id="analysisResults"></div><p class="small muted analysis-footnote">音色模型提供候选 乐句来自音量和起音变化 人物与对白属于艺术解释<br>时间可编辑到毫秒 分析步长为 20 毫秒 这不代表识别误差为零</p></div>
+      </section>
+    </section>
+  </main>
+  <footer class="app-footer"><span class="maker">制作者 / 姜昕宇</span><span id="footerState"></span><button id="about" class="text-link">关于这个工具</button></footer>
+  <input id="audioFile" type="file" accept="audio/*,.flac,.m4a,.mp3,.wav,.ogg" hidden><input id="stemFiles" type="file" accept="audio/*,.wav,.flac,.mp3,.m4a" multiple hidden><input id="projectFile" type="file" accept=".music,.json" hidden>
+  <audio id="audio" preload="auto"></audio>
+  <dialog id="examplesDialog" aria-labelledby="examplesHeading">
+    <div class="dialog-heading"><h2 id="examplesHeading">示例作品</h2><button class="quiet icon-only close" aria-label="关闭示例"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+    <p class="example-intro">同样从声音出发 两种不同的对话</p>
+    <div class="example-grid">
+      <article class="example-work"><video id="guitarExample" controls playsinline preload="none" poster="./examples/two-guitars.jpg" aria-label="两个吉他的对话 示例视频"><source src="./examples/two-guitars.mp4" type="video/mp4"><a href="./examples/two-guitars.mp4">播放两个吉他的对话</a></video><div class="example-description"><h3>两个吉他的对话</h3><span>01:11 · 双吉他 · 中英双语</span><p>一个人有点失落 一个朋友陪他看向远方</p></div></article>
+      <article class="example-work"><video id="pianoExample" controls playsinline preload="none" poster="./examples/piano.jpg" aria-label="先给自己十分钟 钢琴示例视频"><source src="./examples/piano.mp4" type="video/mp4"><a href="./examples/piano.mp4">播放先给自己十分钟</a></video><div class="example-description"><h3>先给自己十分钟</h3><span>00:52 · 钢琴独奏 · 中英双语</span><p>暂时放下催促 听一段留给自己的话</p></div></article>
+    </div><p class="example-credit">制作者 / 姜昕宇</p>
+  </dialog>
+  <dialog id="libraryDialog"><div class="dialog-heading"><h2>作品库</h2><button class="quiet icon-only close" aria-label="关闭"><i class="ph ph-x" aria-hidden="true"></i></button></div><p class="muted small">保存在当前浏览器 导出项目文件可转移到另一台设备</p><div id="projectList"></div><div class="dialog-actions"><button id="newProject" class="solid">导入新音乐</button><button id="restoreLibrary" class="quiet">打开项目文件</button></div></dialog>
+  <dialog id="exportDialog">
+    <div class="dialog-heading"><h2>把这场对话带走</h2><button class="quiet icon-only close" aria-label="关闭"><i class="ph ph-x" aria-hidden="true"></i></button></div>
+    <div class="export-options">
+      <button id="downloadProject"><span>可编辑项目</span><small>包含音频与对白 在另一台设备继续</small><i class="ph ph-download-simple" aria-hidden="true"></i></button>
+      <button id="downloadSrt"><span>双语字幕</span><small>SRT 文件 可继续用于剪辑</small><i class="ph ph-download-simple" aria-hidden="true"></i></button>
+      <button id="downloadJson"><span>时间表与分析</span><small>JSON 文件 保留测量与音色候选</small><i class="ph ph-download-simple" aria-hidden="true"></i></button>
+    </div>
+    <div class="video-export">
+      <div><label for="aspect">视频画幅</label><select id="aspect"><option value="wide">横屏 16:9</option><option value="portrait">竖屏 9:16</option></select></div>
+      <button id="recordVideo" class="solid">生成视频<i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+      <p id="videoNote" class="small muted">包含原声与双语对白 支持的浏览器将逐帧生成 MP4 其他浏览器使用实时录制</p>
+      <div id="recordProgress" hidden><progress id="videoProgress" value="0" max="1"></progress><button id="cancelVideo" class="text-link">取消录制</button></div>
+      <a id="videoDownload" class="download-result" hidden download>下载已生成的视频<i class="ph ph-download-simple" aria-hidden="true"></i></a>
+    </div>
+  </dialog>
+  <dialog id="aboutDialog"><div class="dialog-heading"><h2>音乐如何成为对白</h2><button class="quiet icon-only close" aria-label="关闭"><i class="ph ph-x" aria-hidden="true"></i></button></div><div class="about-copy">
+    <p>制作者 / 姜昕宇</p><p>这是一张可以编辑的声音画布</p><p>音量 起音和音色的变化提供线索 你决定它们像怎样的人 又想说些什么</p>
+    <p>音色判断使用 MTG Jamendo Instrument / Discogs EffNet 模型 结果是候选 不能保证识别所有乐器 也不能证明它们已经被分离</p>
+    <p>自动草稿使用乐句测量与有限的中英话语素材 不调用语言模型 不把音乐解释成确定的字面含义</p>
+    <p>音频和项目保存在当前设备的浏览器里 不上传音频到服务器 不自动同步设备 使用可编辑项目文件进行转移</p>
+    <p class="small">模型原始权重与非商业许可完整保留 应用源码按 AGPL-3.0 开放<br><a href="./credits.html" target="_blank" rel="noopener">来源 源码与开源许可</a></p>
+  </div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script type="module" src="./app.js?v=9"></script>
+</body></html>
